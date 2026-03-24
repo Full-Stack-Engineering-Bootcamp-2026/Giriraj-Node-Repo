@@ -88,7 +88,7 @@ function routes(req,res){
         }
         else{
             res.writeHead(404);
-            res.end('Page Not Found');
+            res.end('Page Not Found')
         }
 
     }
