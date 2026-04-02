@@ -1,21 +1,21 @@
 const path = require("path");
-const db = require("./util/database");
+// const db = require("./util/database");
 const express = require("express");
 const bodyParser = require("body-parser");
-
+const sequelize = require("./util/database");
 const errorController = require("./controllers/error");
 
 const app = express();
 
 app.set("view engine", "ejs");
 app.set("views", "views");
-db.execute("select * from products")
-  .then((result) => {
-    console.log(result[0],result[1]);
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+// db.execute("select * from products")
+//   .then((result) => {
+//     console.log(result[0],result[1]);
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 
@@ -26,5 +26,10 @@ app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
 app.use(errorController.get404);
-
-app.listen(3000);
+sequelize
+  .sync()
+  .then((res) => {
+    console.log(res);
+    app.listen(3000);
+  })
+  .catch((err) => console.log(err));
