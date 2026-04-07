@@ -1,7 +1,8 @@
 const Product = require('../models/product');
 
 exports.createProduct = async (user, data) => {
-  return await user.createProduct(data);
+  const product=new Product(data.title,data.price,data.description,data.imageUrl);
+  return await product.save();
 };
 
 exports.getProductForEdit = async (user, prodId) => {
