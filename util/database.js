@@ -1,11 +1,3 @@
-// const Sequelize = require('sequelize');
-
-// const sequelize = new Sequelize('nodecomplete', 'root', 'your_password', {
-//   dialect: 'mysql',
-//   host: '127.0.0.1'
-// });
-
-// exports.sequelize = sequelize;
 const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
 
@@ -13,7 +5,7 @@ let _db;
 
 const mongoConnect = callback => {
   MongoClient.connect(
-    'mongodb+srv://giriraj1:ram@cluster0.hg0dbh5.mongodb.net/?appName=Cluster0'
+    'mongodb+srv://giriraj1:ram@cluster0.hg0dbh5.mongodb.net/?appName=Cluster0''
   )
     .then(client => {
       console.log('Connected!');
