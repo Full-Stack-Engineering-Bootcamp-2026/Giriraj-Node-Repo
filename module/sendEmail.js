@@ -1,5 +1,5 @@
 const sgMail=require('@sendgrid/mail');
-sgMail.setApiKey('***')
+sgMail.setApiKey('')
 
 const sendMail=async(email)=>{
     const msg={
