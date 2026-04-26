@@ -1,0 +1,7 @@
+For payment razorpay integration : scenario i implemented which is when user click in place order 
+then my backend route hit which is /create-paymet-link  then as frontend i will pass that licnk which 
+respond to frontend and razorpay will show modal then after razor pay will do further process
+
+i did testing from postman 
+
+
