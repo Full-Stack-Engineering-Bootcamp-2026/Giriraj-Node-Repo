@@ -46,11 +46,17 @@ let PostController = class PostController {
         });
         this.create = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             const errors = (0, express_validator_1.validationResult)(req);
+            console.log(req, res);
             if (!errors.isEmpty()) {
                 return res.status(422).json({ message: 'Validation failed' });
             }
+            if (!req.file) {
+                const error = new Error('No image provided .');
+                // error.statusCode=422;
+                return res.status(422).json({ message: 'No image provided' });
+            }
             try {
-                const post = yield this.service.create(req.body);
+                const post = yield this.service.create(req.body, req.file);
                 res.status(201).json({ post });
             }
             catch (err) {

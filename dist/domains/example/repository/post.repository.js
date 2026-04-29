@@ -29,9 +29,9 @@ let PostRepository = class PostRepository {
             return post_entity_1.PostModel.findById(id);
         });
     }
-    create(data) {
+    create(data, file) {
         return __awaiter(this, void 0, void 0, function* () {
-            const post = new post_entity_1.PostModel(Object.assign(Object.assign({}, data), { imageUrl: 'images/duck.jpg', creator: { name: 'Maximilian' } }));
+            const post = new post_entity_1.PostModel(Object.assign(Object.assign({}, data), { imageUrl: file.path, creator: { name: 'Maximilian' } }));
             return post.save();
         });
     }

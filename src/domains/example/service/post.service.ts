@@ -33,8 +33,9 @@ export class PostService {
     return this.mapToDto(post);
   }
 
-  async create(data: PostCreateDto): Promise<PostOutDto> {
-    const post = await this.repository.create(data);
+  async create(data: PostCreateDto,file: Express.Multer.File): Promise<PostOutDto> {
+    const post = await this.repository.create(data,file);
+    //console.log(data,file);
     return this.mapToDto(post);
   }
 

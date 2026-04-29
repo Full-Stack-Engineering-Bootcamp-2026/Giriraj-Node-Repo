@@ -50,9 +50,10 @@ let PostService = class PostService {
             return this.mapToDto(post);
         });
     }
-    create(data) {
+    create(data, file) {
         return __awaiter(this, void 0, void 0, function* () {
-            const post = yield this.repository.create(data);
+            const post = yield this.repository.create(data, file);
+            console.log(data, file);
             return this.mapToDto(post);
         });
     }

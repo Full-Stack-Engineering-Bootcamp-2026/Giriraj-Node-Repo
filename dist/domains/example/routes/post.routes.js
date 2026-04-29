@@ -14,6 +14,16 @@ const express_1 = require("express");
 const typedi_1 = require("typedi");
 const express_validator_1 = require("express-validator");
 const post_controller_1 = require("../controller/post.controller");
+// 2. Configure storage (this saves files to an 'images' folder)
+// const fileStorage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, 'images'); 
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname);
+//   }
+// });
+// const upload = multer({ storage: fileStorage }); 
 let PostRoutes = class PostRoutes {
     constructor(controller) {
         this.controller = controller;
@@ -23,7 +33,9 @@ let PostRoutes = class PostRoutes {
     init() {
         this.router.get('/posts', this.controller.getAll);
         this.router.get('/post/:postId', this.controller.getById);
-        this.router.post('/post', [
+        this.router.post('/post', 
+        //upload.single('imageUrl'),
+        [
             (0, express_validator_1.body)('title').isLength({ min: 7 }),
             (0, express_validator_1.body)('content').isLength({ min: 5 }),
         ], this.controller.create);

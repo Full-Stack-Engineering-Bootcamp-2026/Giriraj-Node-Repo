@@ -52,10 +52,29 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const path_1 = __importDefault(require("path"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const typedi_1 = require("typedi");
+const multer_1 = __importDefault(require("multer"));
 const logger_1 = require("./common/utils/logger");
 const error_handler_middleware_1 = require("./common/middleware/error-handler.middleware");
 const post_routes_1 = require("./domains/example/routes/post.routes");
 dotenv_1.default.config();
+const fileStorage = multer_1.default.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'images');
+    },
+    filename: (req, file, cb) => {
+        //cb(null,new Date().toISOString()+'-'+file.originalname);
+        const safeDate = new Date().toISOString().replace(/:/g, '-');
+        cb(null, safeDate + '-' + file.originalname);
+    },
+});
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
+        cb(null, true);
+    }
+    else {
+        cb(null, false);
+    }
+};
 class Application {
     constructor() {
         this.app = (0, express_1.default)();
@@ -81,6 +100,10 @@ class Application {
         this.app.use((0, cors_1.default)());
         this.app.use(express_1.default.json());
         this.app.use('/images', express_1.default.static(path_1.default.join(__dirname, 'images')));
+        this.app.use((0, multer_1.default)({
+            storage: fileStorage,
+            fileFilter: fileFilter
+        }).single('image'));
     }
     initializeRoutes() {
         const v1Router = (0, express_1.Router)();

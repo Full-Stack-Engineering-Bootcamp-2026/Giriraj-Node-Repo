@@ -28,12 +28,17 @@ export class PostController {
 
   create = async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
+    console.log(req,res);
     if (!errors.isEmpty()) {
       return res.status(422).json({ message: 'Validation failed' });
     }
-
+    if(!req.file){
+      const error=new Error('No image provided .');
+      // error.statusCode=422;
+      return res.status(422).json({message:'No image provided'});
+    }
     try {
-      const post = await this.service.create(req.body);
+      const post = await this.service.create(req.body,req.file);
       res.status(201).json({ post });
     } catch (err) {
       next(err);

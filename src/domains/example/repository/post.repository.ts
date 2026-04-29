@@ -12,10 +12,10 @@ export class PostRepository {
     return PostModel.findById(id);
   }
 
-  async create(data: PostCreateDto): Promise<PostDocument> {
+  async create(data: PostCreateDto,file:Express.Multer.File): Promise<PostDocument> {
     const post = new PostModel({
       ...data,
-      imageUrl: 'images/duck.jpg',
+      imageUrl:file.path,
       creator: { name: 'Maximilian' },
     });
 
