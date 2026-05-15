@@ -27,7 +27,9 @@ let PostController = class PostController {
         this.service = service;
         this.getAll = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const posts = yield this.service.getAll();
+                const page = parseInt(req.query.page) || 1;
+                const limit = Math.min(parseInt(req.query.limit) || 2);
+                const posts = yield this.service.getAll(page, limit);
                 res.status(200).json({ posts });
             }
             catch (err) {
@@ -64,9 +66,19 @@ let PostController = class PostController {
             }
         });
         this.update = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+            const errors = (0, express_validator_1.validationResult)(req);
+            console.log(req, res);
+            if (!errors.isEmpty()) {
+                return res.status(422).json({ message: 'Validation failed' });
+            }
+            if (!req.file) {
+                const error = new Error('No image provided .');
+                // error.statusCode=422;
+                return res.status(422).json({ message: 'No image provided' });
+            }
             try {
                 const postId = req.params.postId;
-                const post = yield this.service.update(postId, req.body);
+                const post = yield this.service.update(postId, req.body, req.file);
                 res.status(200).json({ post });
             }
             catch (err) {

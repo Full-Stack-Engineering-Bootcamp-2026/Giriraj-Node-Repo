@@ -4,8 +4,23 @@ import { PostCreateDto, PostUpdateDto } from '../dto/post.dto';
 
 @Service()
 export class PostRepository {
-  async findAll(): Promise<PostDocument[]> {
-    return PostModel.find();
+  // async findAll(): Promise<PostDocument[]> {
+  //   return PostModel.find();
+  // }
+  async findAll(
+    page:number,
+    limit:number
+  ):Promise<{data:PostDocument[];total:number}>{
+    const skip=(page-1)*limit;
+    const [data,total]=await Promise.all([
+      PostModel.find()
+      .sort({createdAt:-1})
+      .skip(skip)
+      .limit(limit),
+      PostModel.countDocuments(),
+    ]);
+
+    return {data,total};
   }
 
   async findById(id: string): Promise<PostDocument | null> {

@@ -4,6 +4,7 @@ import {
   PostCreateDto,
   PostOutDto,
   PostUpdateDto,
+  PaginatedPostsDto
 } from '../dto/post.dto';
 
 @Service()
@@ -22,9 +23,17 @@ export class PostService {
     };
   }
 
-  async getAll(): Promise<PostOutDto[]> {
-    const posts = await this.repository.findAll();
-    return posts.map((p) => this.mapToDto(p));
+  async getAll(page: number, limit: number): Promise<PaginatedPostsDto> {
+    const { data, total } = await this.repository.findAll(page, limit);
+
+    return {
+      posts: data.map((p) => this.mapToDto(p)),
+      pagination: {
+        total,
+        page,
+        pages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async getById(id: string): Promise<PostOutDto> {
@@ -39,7 +48,11 @@ export class PostService {
     return this.mapToDto(post);
   }
 
-  async update(id: string, data: PostUpdateDto): Promise<PostOutDto> {
+  async update(id: string, data: PostUpdateDto,file: Express.Multer.File): Promise<PostOutDto> {
+    data.imageUrl=file.path;
+    if(file){
+      data.imageUrl=file.path;
+    }
     const post = await this.repository.update(id, data);
     if (!post) throw new Error('Post not found');
     return this.mapToDto(post);

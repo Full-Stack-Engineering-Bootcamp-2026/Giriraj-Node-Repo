@@ -36,10 +36,17 @@ let PostService = class PostService {
             updatedAt: post.updatedAt,
         };
     }
-    getAll() {
+    getAll(page, limit) {
         return __awaiter(this, void 0, void 0, function* () {
-            const posts = yield this.repository.findAll();
-            return posts.map((p) => this.mapToDto(p));
+            const { data, total } = yield this.repository.findAll(page, limit);
+            return {
+                posts: data.map((p) => this.mapToDto(p)),
+                pagination: {
+                    total,
+                    page,
+                    pages: Math.ceil(total / limit),
+                },
+            };
         });
     }
     getById(id) {
@@ -53,12 +60,16 @@ let PostService = class PostService {
     create(data, file) {
         return __awaiter(this, void 0, void 0, function* () {
             const post = yield this.repository.create(data, file);
-            console.log(data, file);
+            //console.log(data,file);
             return this.mapToDto(post);
         });
     }
-    update(id, data) {
+    update(id, data, file) {
         return __awaiter(this, void 0, void 0, function* () {
+            data.imageUrl = file.path;
+            if (file) {
+                data.imageUrl = file.path;
+            }
             const post = yield this.repository.update(id, data);
             if (!post)
                 throw new Error('Post not found');

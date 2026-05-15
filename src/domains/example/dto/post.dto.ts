@@ -20,3 +20,12 @@ export interface PostUpdateDto {
   content?: string;
   imageUrl?: string;
 }
+export interface PaginationMeta{
+  total:number;
+  page:number;
+  pages:number;
+}
+export interface PaginatedPostsDto{
+  posts:PostOutDto[];
+  pagination:PaginationMeta;
+}

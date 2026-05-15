@@ -39,7 +39,10 @@ let PostRoutes = class PostRoutes {
             (0, express_validator_1.body)('title').isLength({ min: 7 }),
             (0, express_validator_1.body)('content').isLength({ min: 5 }),
         ], this.controller.create);
-        this.router.put('/post/:postId', this.controller.update);
+        this.router.put('/post/:postId', [
+            (0, express_validator_1.body)('title').isLength({ min: 7 }),
+            (0, express_validator_1.body)('content').isLength({ min: 5 }),
+        ], this.controller.update);
         this.router.delete('/post/:postId', this.controller.delete);
     }
     getRoutes() {

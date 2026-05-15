@@ -9,7 +9,9 @@ export class PostController {
 
   getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const posts = await this.service.getAll();
+      const page=parseInt(req.query.page as string)||1;
+      const limit=Math.min(parseInt(req.query.limit as string)||2);
+      const posts = await this.service.getAll(page,limit);
       res.status(200).json({ posts });
     } catch (err) {
       next(err);
@@ -46,9 +48,19 @@ export class PostController {
   };
 
   update = async (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    console.log(req,res);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ message: 'Validation failed' });
+    }
+    if(!req.file){
+      const error=new Error('No image provided .');
+      // error.statusCode=422;
+      return res.status(422).json({message:'No image provided'});
+    }
     try {
       const postId = req.params.postId as string;
-      const post = await this.service.update(postId, req.body);
+      const post = await this.service.update(postId, req.body,req.file);
       res.status(200).json({ post });
     } catch (err) {
       next(err);

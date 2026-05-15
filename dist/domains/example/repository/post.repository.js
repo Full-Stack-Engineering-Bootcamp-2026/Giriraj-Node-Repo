@@ -19,9 +19,20 @@ exports.PostRepository = void 0;
 const typedi_1 = require("typedi");
 const post_entity_1 = require("../entities/post.entity");
 let PostRepository = class PostRepository {
-    findAll() {
+    // async findAll(): Promise<PostDocument[]> {
+    //   return PostModel.find();
+    // }
+    findAll(page, limit) {
         return __awaiter(this, void 0, void 0, function* () {
-            return post_entity_1.PostModel.find();
+            const skip = (page - 1) * limit;
+            const [data, total] = yield Promise.all([
+                post_entity_1.PostModel.find()
+                    .sort({ createdAt: -1 }) // optional but recommended
+                    .skip(skip)
+                    .limit(limit),
+                post_entity_1.PostModel.countDocuments(),
+            ]);
+            return { data, total };
         });
     }
     findById(id) {
